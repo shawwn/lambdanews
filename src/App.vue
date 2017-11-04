@@ -54,6 +54,7 @@
   body
     padding 8px
     line-height normal
+    list-style none
 
   #hnmain
     width 85%
@@ -88,6 +89,7 @@
         text-decoration underline
 
   .text
+    color black
     a
       text-decoration underline
 
