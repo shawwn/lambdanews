@@ -1,32 +1,39 @@
 <template>
-  <li v-if="comment" class="comment">
+  <li v-if="comment && (head || !comment.deleted)" class="comment">
     <div class="comhead">
       <router-link :to="'/user/' + comment.by">{{ comment.by }}</router-link>
-      {{ comment.time | timeAgo }} ago
-      <span class="toggle" :class="{ open }">
+      <router-link :to="'/item/' + comment.id">
+          {{ comment.time | timeAgo }} ago
+      </router-link>
+      <span class="toggle" :class="{ open }" v-if="!head">
         <a @click="open = !open">{{
           open
             ? '[-]'
             : '[+]'
           }}</a>
       </span>
+      <span v-else>
+        | <router-link :to="'/item/' + comment.parent">parent</router-link>
+        <!-- TODO: "on" -->
+      </span>
     </div>
     <div v-show="open">
-      <div class="text" v-html="comment.text"></div>
+      <div class="text" v-html="comment.deleted ? '[deleted]' : comment.text"></div>
       <div class="text reply" style="font-size:10px">
         <a>reply</a>
       </div>
-      <ul class="comment-children">
-        <comment v-for="id in comment.kids" :key="id" :id="id"></comment>
+      <ul class="comment-children" :v-if="!head">
+        <comment v-for="id in (head ? [] : comment.kids)" :key="id" :id="id"></comment>
       </ul>
     </div>
   </li>
 </template>
 
+
 <script>
 export default {
   name: 'comment',
-  props: ['id'],
+  props: ['id', 'head'],
   data () {
     return {
       open: true

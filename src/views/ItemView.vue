@@ -1,7 +1,7 @@
 <template>
   <div class="item-view" v-if="item">
     <template v-if="item">
-      <div class="item-view-header">
+      <div class="item-view-header" v-if="item.type !== 'comment'">
         <a :href="item.url">
           {{ item.title }}
         </a>
@@ -11,18 +11,19 @@
         <br>
         <span class="subtext">
           {{ item.score }} points by <router-link :to="'/user/' + item.by">{{ item.by }}</router-link>
-          {{ item.time | timeAgo }} ago | {{ item.descendants + ' comments' }}
+          {{ item.time | timeAgo }} ago | {{ (item.descendants || item.kids && item.kids.length || 0) + ' comments' }}
         </span>
         <div :show="item.text" class="selftext">
           <span v-html="item.text">
           </span>
         </div>
       </div>
+      <comment v-else :id="item.id" :head="true"></comment>
       <div class="item-view-comments">
         <span class="item-view-comments-header">
           <spinner :show="loading"></spinner>
         </span>
-        <ul v-if="!loading" class="comment-children">
+        <ul v-if="!loading && item.kids" class="comment-children">
           <comment v-for="id in item.kids" :key="id" :id="id"></comment>
         </ul>
       </div>
@@ -72,6 +73,7 @@ export default {
   methods: {
     fetchComments () {
       if (!this.item || !this.item.kids) {
+        this.loading = false
         return
       }
 
