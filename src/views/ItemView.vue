@@ -34,6 +34,7 @@
 <script>
 import Spinner from '../components/Spinner.vue'
 import Comment from '../components/Comment.vue'
+import { ellipsize, unescapeHtml } from '../util/filters'
 
 export default {
   name: 'item-view',
@@ -57,7 +58,7 @@ export default {
   },
 
   title () {
-    return this.item.title
+    return this.item.type !== 'comment' ? this.item.title : ellipsize(unescapeHtml(this.item.text))
   },
 
   // Fetch comments when mounted on the client

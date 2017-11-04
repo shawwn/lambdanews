@@ -16,9 +16,18 @@ export function timeAgo (time) {
   }
 }
 
-function pluralize (time, label) {
+export function pluralize (time, label) {
   if (time === 1) {
     return time + label
   }
   return time + label + 's'
+}
+
+export function ellipsize (str, limit=80) {
+  return (str.length <= limit) ? str : str.substr(0, limit) + '...'
+}
+
+export function unescapeHtml (label) {
+  return (typeof DOMParser === 'undefined') ? label
+    : new DOMParser().parseFromString(label, 'text/html').documentElement.textContent
 }

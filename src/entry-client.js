@@ -30,6 +30,8 @@ if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__)
 }
 
+window.VueState = { Vue, app, router, store }
+
 // wait until router has resolved all async before hooks
 // and async components...
 router.onReady(() => {
